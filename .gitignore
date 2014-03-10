@@ -3,6 +3,9 @@
 # C extensions
 *.so
 
+# json data files
+*.json
+
 # Packages
 *.egg
 *.egg-info
