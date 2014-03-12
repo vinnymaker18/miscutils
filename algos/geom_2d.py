@@ -7,12 +7,13 @@ from math import asin, pi, sqrt
 # A very small value, used for comparisions with zero.
 EPS = 1e-9
 
+# Points and vectors are considered different in this module.
 # All the routines accept and return (x, y) tuples for vectors and 2d points.
 
 def cross_product(vec1, vec2):
     """Cross product of two 2d vectors is a vector
        perpendicular to both these vectors. Return value is a
-       scalar representing the magniture and direction(towards
+       scalar representing the magnitude and direction(towards
        positive/negative z-axis) of the cross product.
     """
 
@@ -21,10 +22,10 @@ def cross_product(vec1, vec2):
 
 
 def dot_product(vec1, vec2):
-    """Dot product of two vectors is a scalar that, when norm, measures
-    how colinear are the two input vectors. e.g. vec1.vec2/|vec1||vec2| = -1 implies$
-    they are alignedexactly opposite to each other, while a value of 1 implies 
-    that they are aligned in the same direction.
+    """Dot product of two vectors is a scalar that, when normalized, measures
+    how colinear are the two input vectors. e.g. vec1.vec2/|vec1||vec2| = -1 
+    implies they are aligned exactly opposite to each other, while a value of 1
+    implies that they are aligned in the same direction.
     """
 
     (px1, py1), (px2, py2) = vec1, vec2
@@ -52,6 +53,7 @@ def scalar_mult(vec, fac):
 def turn_angle(vec1, vec2):
     """How much angleto turn anti-clockwise as we change our direction from 
     vec1 to vec2. Units are radians"""
+
     mag1, mag2 = [vector_magnitude(v) for v in [vec1, vec2]]
     
     # Special case is when one of the vectors is a zero vector.
@@ -80,6 +82,7 @@ def turn_angle(vec1, vec2):
 
 def point_dist(pt1, pt2):
     """ Euclidean distance b/w p and q"""
+
     (px1, py1), (px2, py2) = pt1, pt2
     d_x, d_y = (px2-px1, py2-py1)
     return sqrt(d_x*d_x + d_y*d_y)
@@ -145,11 +148,12 @@ def lines_intersect(pt1, qt1, pt2, qt2, segments = False):
 # that encloses(or includes) all the points in the given set.
 def convex_hull(pts):
     """Graham's scan algorithm. Complexity is O(nlogn) where n is 
-    the no. of points in pts.
-    pts : A list of (x, y) tuples which are points. Assumes that
-    the vertices are distinct.
-    """
+    the no. of points in pts. Returns the hull vertices in counter clockwise
+    order.
 
+    pts : A list of (x, y) tuples which are points. Assumes that
+    the vertices are distinct.(Assumption not strictly necessary)
+    """
     pts = list(pts)
     size = len(pts)
     if size < 3:
@@ -157,7 +161,7 @@ def convex_hull(pts):
 
     
     # Start with the vertex with the lowest y-coordinate. (Left most
-    # one if several have the lowest y-coordinate).
+    # one if several have the lowest y-coordinate) and call it V0.
     (px0, py0) = pts[0]
     for (ppx, ppy) in pts:
         if ppy < py0 or (ppy == py0 and ppx < px0):
@@ -179,7 +183,7 @@ def convex_hull(pts):
         return angle_turned <= pi - EPS
 
     stack = pts[0:2]
-    for point in pts[1:]:
+    for point in pts[2:]:
         while len(stack) >= 2 and \
             not is_a_left_turn(stack[-2], stack[-1], point):
             stack.pop()
@@ -191,14 +195,10 @@ def convex_hull(pts):
 
 # pts can be a list or a generator expression.
 def poly_area(pts):
-    """Area of the given polygon. Computes the convex hull and sums the area
-    of its component triangles. Of O(nlogn) complexity, but doesn't make the
-    usual assumption that the points are in order.
+    """Area of the polygon with vertices `pts'. Assumes that the points are
+    ordered clockwise or anti-clockwise. Users could compute the convex hull
+    first and then compute the area, if their vertices are not ordered.
     """
-
-    # Get the hull.
-    hull = convex_hull(pts)
-    size = len(hull)
 
     if size < 3:
         return 0
