@@ -1,5 +1,4 @@
-import primes
-import combinatorics
+from algos import primes, combinatorics
 
 # Problem 21 asks for the sum of all amicable numbers below 10000
 def p21():

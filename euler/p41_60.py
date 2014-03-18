@@ -1,5 +1,4 @@
-import primes
-import combinatorics
+from algos import primes, combinatorics
 import time
 
 # No need to consider 9 digit numbers because every such number is divisible

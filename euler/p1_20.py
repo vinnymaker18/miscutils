@@ -1,7 +1,5 @@
-# for prime number related functions
-import primes
-# for combinatoric functions
-import combinatorics
+# for prime number and combinatoric functions.
+from algos import primes, combinatorics
 
 # A number that is evenly divisible by 15 gets added twice.
 def p1():
