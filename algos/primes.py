@@ -14,7 +14,7 @@ def getPrimeList(n):
             for q in xrange(p*p, n+1, p):
                 isPrime[q] = False
 
-    return [x for x in xrange(2, n+1) if isPrime[x] ]
+    return [x for x in xrange(2, n+1) if isPrime[x]]
 
 
 # O(sqrt(n))
