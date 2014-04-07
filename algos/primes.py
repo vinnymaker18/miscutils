@@ -25,11 +25,7 @@ def checkIfPrime(n):
         return False
 
     s = int(n ** 0.5)
-    for p in xrange(2, s+1):
-        if n%p == 0:
-            return False
-    return True
-
+    return all(n % x != 0 for x in xrange(2, s+1))
 
 # Prime factorises a positive integer.
 # O(sqrt(n))
