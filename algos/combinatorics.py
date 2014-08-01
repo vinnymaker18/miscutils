@@ -1,15 +1,17 @@
-# Provides all the combinatoric functions. e.g., combinations, permutations etc.
-
+# Provides all the combinatoric functions. e.g., combinations, permutations
 # N choose K is the no. of ways of choosing K elements from N distinct ones.
 # This equals N! / (N-K)! / K! after cancelling common terms, we are left with
 # this code.
+
+
 def choose(n, k):
     """ N Choose K """
 
     ret = 1
-    for i in xrange(1, k+1):
+    for i in xrange(1, k + 1):
         ret = ret * (n-k+i) / i
     return ret
+
 
 # N choose K with dynamic programming approach.
 # choose(n,k) = choose(n-1, k) + choose(n-1, k-1)
@@ -28,6 +30,7 @@ def choose2(n, k):
         row = newRow
 
     return row[k]
+
 
 # Generator for all permutations of the given array.
 # Creates a new copy of the array and works with the new copy.
@@ -59,4 +62,3 @@ def genAllPerms(array):
         a[x:] = a[x:][::-1]
 
     return
-
