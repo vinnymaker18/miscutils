@@ -2,6 +2,7 @@
 
 # vim swap files
 *.swp
+.ropeproject
 # C extensions
 *.so
 

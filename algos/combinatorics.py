@@ -6,7 +6,6 @@
 
 def choose(n, k):
     """ N Choose K """
-
     ret = 1
     for i in xrange(1, k + 1):
         ret = ret * (n-k+i) / i
