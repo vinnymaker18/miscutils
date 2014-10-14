@@ -1,7 +1,7 @@
 *.py[cod]
 
 # vim swap files
-*.swp
+*.sw[po]
 .ropeproject
 # C extensions
 *.so
