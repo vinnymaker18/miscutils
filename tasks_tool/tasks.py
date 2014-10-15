@@ -5,6 +5,8 @@
 # deadline,
 # update_task -- db_file_path, task_object.
 
+# SQL statements must always be enclosed in double qoutes, or by triple "s for
+# a multiline statement.
 import sqlite3
 
 
@@ -29,14 +31,16 @@ def _map(db_row, lbl_set):
 
 
 # Load the set of tasks matching the given filters. Each task object is a map
-# from column names to values.
+# from column names to values. Naively loads all the tasks into memory - this
+# is a personal script for fuck's sake.
 def load_tasks(db_file_path, labels=None, filters=dict()):
     with sqlite3.connect(db_file_path) as conn:
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
         cursor.execute('SELECT * FROM tasks;')
-        tasks = [_map(task, labels) for task in cursor.fetchall()]
+        tasks = [_map(task, None) for task in cursor.fetchall()]
         tasks = filter(lambda t: _good(t, filters), tasks)
+        tasks = [_map(task, labels) for task in tasks]
 
     return tasks
 
@@ -52,11 +56,18 @@ def add_task(db_file_path, task_id, title,
         conn.commit()
 
 
-# Update an existing task.
-def update_task(db_file_path, task):
+# Update an existing task. changes is a map of column labels to new values.
+def update_task(db_file_path, task_id, changes):
+    if not changes:
+        # db call is unnecessary.
+        return
+
     with sqlite3.connect(db_file_path) as conn:
-        task_id = task["task_id"]
-        sql = "UPDATE tasks SET status = '%s' WHERE task_id = %d"\
-              % (task["status"], task_id)
+        sql, args = "UPDATE tasks SET ", []
+        for lbl, new_val in changes.items():
+            sql += lbl + " = " + "'%s'"
+            args.append(new_val)
+        sql = sql + " WHERE task_id = '%d'" % (task_id,)
+        sql = sql % tuple(args)
         conn.execute(sql)
         conn.commit()
