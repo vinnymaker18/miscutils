@@ -46,12 +46,20 @@ def load_tasks(db_file_path, labels=None, filters=dict()):
 
 
 # Add a new task.
-def add_task(db_file_path, task_id, title,
+def add_task(db_file_path, title,
              body, priority, date_opened,
              deadline, status='active'):
     with sqlite3.connect(db_file_path) as conn:
-        sql = """INSERT INTO tasks (task_id, title, body, priority, date_opened, deadline, status) VALUES (%d, '%s', '%s', '%s', '%s', '%s', '%s')"""\
-              % (task_id, title, body, priority, date_opened, deadline, status)
+        sql = """INSERT INTO tasks (title, body, priority, date_opened, deadline, status) VALUES ('%s', '%s', '%s', '%s', '%s', '%s')"""\
+              % (title, body, priority, date_opened, deadline, status)
+        conn.execute(sql)
+        conn.commit()
+
+
+# Deletes a task from the database.
+def delete_task(db_file_path, task_id):
+    with sqlite3.connect(db_file_path) as conn:
+        sql = "DELETE FROM tasks WHERE task_id = '%d'" % (task_id,)
         conn.execute(sql)
         conn.commit()
 
